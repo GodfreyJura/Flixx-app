@@ -1,20 +1,29 @@
-// api/tmdb.js
 export default async function handler(req, res) {
-  const { type = "movie", query = "", page = 1 } = req.query;
+  const { endpoint, ...query } = req.query;
 
-  if (!query) {
-    return res.status(400).json({ error: "Missing query parameter" });
+  if (!endpoint) {
+    return res.status(400).json({ error: "Missing 'endpoint' parameter" });
   }
 
+  
+  const queryString = new URLSearchParams(query).toString();
+  const url = `https://api.themoviedb.org/3${endpoint}${queryString ? `?${queryString}` : ""}`;
+
   try {
-    const apiKey = process.env.TMDB_API_KEY; // stored in Vercel Env
-    const url = `https://api.themoviedb.org/3/search/${type}?api_key=${apiKey}&query=${encodeURIComponent(query)}&page=${page}`;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
+        accept: "application/json",
+      },
+    });
 
-    const response = await fetch(url);
+    if (!response.ok) {
+      return res.status(response.status).json({ error: "Failed to fetch from TMDB" });
+    }
+
     const data = await response.json();
-
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch TMDB API" });
+    return res.status(500).json({ error: "Server error", details: error.message });
   }
 }
