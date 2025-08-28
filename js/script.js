@@ -1,11 +1,9 @@
-// script.js
-
-// Use your backend proxy instead of exposing the TMDB API key
-const API_URL = '/api/tmdb'; // this points to your Vercel API route
+//script.js
+const API_URL = '/api/tmdb'; 
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_BASE_URL = 'https://image.tmdb.org/t/p/original';
 
-// How many pages to aggregate (in parallel) for Popular sections
+
 const PAGES_TO_FETCH = 7;
 
 let currentPage = 1;
