@@ -6,9 +6,9 @@ const BACKDROP_BASE_URL = 'https://image.tmdb.org/t/p/original';
 let currentPage = 1;
 let totalPages = 1;
 let currentQuery = '';
-let currentType = 'movie'; // 'movie' or 'tv'
+let currentType = 'movie'; 
 
-// ---------------- Spinner ----------------
+
 function showSpinner() {
   const spinner = document.querySelector('.spinner');
   if (spinner) spinner.style.display = 'block';
@@ -18,7 +18,7 @@ function hideSpinner() {
   if (spinner) spinner.style.display = 'none';
 }
 
-// ---------------- Generic Fetch ----------------
+
 async function fetchAPI(endpoint) {
   showSpinner();
   try {
@@ -33,7 +33,6 @@ async function fetchAPI(endpoint) {
   }
 }
 
-// ---------------- Now Playing Carousel ----------------
 async function displayNowPlaying() {
   const swiperWrapper = document.querySelector('.swiper .swiper-wrapper');
   if (!swiperWrapper) return;
@@ -69,7 +68,7 @@ async function displayNowPlaying() {
   });
 }
 
-// ---------------- Popular Movies ----------------
+
 async function displayPopularMovies() {
   const data = await fetchAPI(`${API_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`);
   const container = document.getElementById('popular-movies');
@@ -100,7 +99,6 @@ async function displayPopularMovies() {
   });
 }
 
-// ---------------- Popular TV Shows ----------------
 async function displayPopularTVShows() {
   const data = await fetchAPI(`${API_URL}/tv/popular?api_key=${API_KEY}&language=en-US&page=1`);
   const container = document.getElementById('popular-shows');
@@ -113,7 +111,7 @@ async function displayPopularTVShows() {
   }
 
   data.results.forEach(show => {
-    const poster = show.poster_path ? `${IMAGE_BASE_URL}${show.poster_path}` : 'images/no-image.jpg';
+    const poster = show.poster_path ? `${IMAGE_BASE_URL}${show.poster_path}` : 'images/showcase-bg.jpg';
     const card = document.createElement('div');
     card.classList.add('card');
     card.innerHTML = `
@@ -131,7 +129,7 @@ async function displayPopularTVShows() {
   });
 }
 
-// ---------------- Display Details (Movie or TV) ----------------
+
 async function displayDetails() {
   const id = new URLSearchParams(window.location.search).get('id');
   if (!id) return;
@@ -159,7 +157,7 @@ async function displayDetails() {
   const date = data.release_date || data.first_air_date;
   const poster = data.poster_path ? `${IMAGE_BASE_URL}${data.poster_path}` : 'images/no-image.jpg';
 
-  // Calculate episode runtime for TV shows
+  
   let runtimeText = 'N/A';
   if (!isMovie && Array.isArray(data.episode_run_time) && data.episode_run_time.length > 0) {
     const avg = data.episode_run_time.reduce((a, b) => a + b, 0) / data.episode_run_time.length;
@@ -191,7 +189,7 @@ async function displayDetails() {
   displayBackgroundImage(containerSelector, data.backdrop_path);
 }
 
-// ---------------- Background Overlay ----------------
+
 function displayBackgroundImage(selector, backdropPath) {
   if (!backdropPath) return;
   const container = document.querySelector(selector);
@@ -202,14 +200,14 @@ function displayBackgroundImage(selector, backdropPath) {
   overlay.style.position = 'absolute';
   overlay.style.top = 0;
   overlay.style.left = 0;
-  overlay.style.width = '100%';
+  overlay.style.width = '100vh';
   overlay.style.height = '100vh';
   overlay.style.zIndex = '-1';
   overlay.style.opacity = '0.1';
   container.appendChild(overlay);
 }
 
-// ---------------- Search & Pagination ----------------
+
 function initSearch() {
   const form = document.querySelector('.search-form');
   if (!form) return;
@@ -302,7 +300,7 @@ function initSearch() {
   if (!currentQuery) searchAndDisplay();
 }
 
-// ---------------- Initialize ----------------
+
 document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('.swiper .swiper-wrapper')) displayNowPlaying();
   if (document.getElementById('popular-movies')) displayPopularMovies();
