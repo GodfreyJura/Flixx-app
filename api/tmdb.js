@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         accept: "application/json",
       },
     });
-
+ 
     if (!response.ok) {
       return res.status(response.status).json({ error: "Failed to fetch from TMDB" });
     }
