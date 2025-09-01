@@ -5,8 +5,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing 'endpoint' parameter" });
   }
 
-  
-  const queryString = new URLSearchParams(query).toString();
+    const queryString = new URLSearchParams(query).toString();
   const url = `https://api.themoviedb.org/3${endpoint}${queryString ? `?${queryString}` : ""}`;
 
   try {
@@ -27,3 +26,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server error", details: error.message });
   }
 }
+   
